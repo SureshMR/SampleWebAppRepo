@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-helloworld-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-helloworld-app
+  template:
+    metadata:
+      labels:
+        app: my-helloworld-app
+    spec:
+      containers:
+      - name: mypythondockerrepo
+        image: myacrrepo17.azurecr.io/helloworldapp:latest
+        ports:
+        - containerPort: 5000
+# service type loadbalancer       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-helloworld-app-svc
+spec:
+  selector:
+    app: my-helloworld-app
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
